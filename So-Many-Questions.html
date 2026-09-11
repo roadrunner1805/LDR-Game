@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>So Many Questions!</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+
+    <style>
+      body {
+        background-color: #e8f5e9;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container text-center">
+      <h1 class="my-4">So Many Questions!</h1>
+
+      <div class="card mx-auto" style="max-width: 600px">
+        <div class="card-body">
+          <h5 class="card-title">Question:</h5>
+
+          <p id="question" class="card-text">
+            Click the button to get a question!
+          </p>
+
+          <button id="nextQuestion" class="btn btn-primary">
+            Next Question
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JavaScript -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Our JavaScript -->
+    <script>
+      const questions = [
+        // 😂 Silly
+        "What animal would make the funniest roommate?",
+        "If you could have one completely useless superpower, what would it be?",
+        "What would your wrestling entrance song be?",
+        "If you had to wear one Halloween costume every year forever, what would it be?",
+        "What food would be the funniest thing to eat on a first date?",
+        "If you could replace your hands with anything, what would you choose?",
+        "What would you name a pet rock?",
+        "If you had to survive a zombie apocalypse with one celebrity, who would you pick?",
+        "What would be the worst possible name for a baby?",
+        "If you were a cartoon character, what would your catchphrase be?",
+
+        // 🤪 Stupid
+        "Would you rather fight 100 duck-sized horses or 1 horse-sized duck?",
+        "If you were a potato, how would you want to be cooked?",
+        "What is the stupidest thing you would buy if you suddenly became rich?",
+        "If you could only communicate through animal noises for a day, which animal would you choose?",
+        "Would you rather have spaghetti for hair or sweat maple syrup?",
+        "If you had to lick one household object, what would you choose?",
+        "What would be the worst flavor of ice cream?",
+        "If you could make one ridiculous law that everyone had to follow, what would it be?",
+        "What would you do if you woke up tomorrow as a worm?",
+        "If your life had a laugh track, what moment would get the biggest laugh?",
+
+        // 💕 Sweet
+        "What is a little thing I do that makes you happy?",
+        "What was your first impression of me?",
+        "What is one memory of us that always makes you smile?",
+        "What is something you are excited for us to do together?",
+        "What is one place you would love for us to visit together?",
+        "What is your favorite memory of us so far?",
+        "What is something about me that you think is underrated?",
+        "What is one thing you hope we get to experience together someday?",
+        "What is something I do that you secretly find adorable?",
+        "If we could relive one day together, which day would you pick?",
+
+        // 🎲 Random
+        "If you could instantly become an expert at anything, what would it be?",
+        "If you could have dinner with any fictional character, who would you choose?",
+        "What is a completely random skill you wish you had?",
+        "If you could live in any fictional universe, which one would you pick?",
+        "What is the strangest dream you remember having?",
+        "If you could teleport anywhere right now, where would you go?",
+        "If you could switch lives with someone for one day, who would it be?",
+        "What three things would you bring to a deserted island?",
+        "If money didn't matter, what would your dream job be?",
+        "If you could go back and watch any historical event happen, which one would you choose?",
+
+        // 🧠 Serious
+        "What is something you really want to accomplish in the next five years?",
+        "What is something you are currently trying to get better at?",
+        "What is something you are proud of yourself for?",
+        "What is something you wish you had more time for?",
+        "What is something you think you have changed your mind about as you've gotten older?",
+        "What does your ideal future look like?",
+        "What is something that always makes you feel better when you're having a bad day?",
+        "What is something you are afraid of failing at?",
+        "What is something you want to learn someday?",
+        "What do you think makes a good life?",
+
+        // 👀 Get-to-know-you
+        "What is a weird habit you have that I might not know about?",
+        "What is your most embarrassing childhood memory?",
+        "What is something you loved as a kid that you still love now?",
+        "What is your biggest irrational fear?",
+        "What is something you could talk about for hours?",
+        "What is one food you absolutely refuse to eat?",
+        "What is your most controversial food opinion?",
+        "What is something you have always wanted to try?",
+        "What is the weirdest compliment you've ever received?",
+        "What is one thing you think you would be surprisingly good at?",
+      ];
+
+      const nextQuestionButton = document.getElementById("nextQuestion");
+      const questionText = document.getElementById("question");
+
+      nextQuestionButton.addEventListener("click", function () {
+        const randomNumber = Math.floor(Math.random() * questions.length);
+
+        questionText.textContent = questions[randomNumber];
+      });
+    </script>
+  </body>
+</html>

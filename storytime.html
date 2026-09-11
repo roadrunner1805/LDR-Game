@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Story Time</title>
+
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+
+    <!-- Our CSS -->
+    <style>
+      body {
+        background-color: #f3e5f5;
+      }
+
+      .game-container {
+        max-width: 800px;
+        margin: auto;
+      }
+
+      .story-card {
+        min-height: 300px;
+      }
+
+      #storyPrompt {
+        font-size: 28px;
+        font-weight: 500;
+      }
+
+      #followUp {
+        font-size: 22px;
+        font-weight: 400;
+      }
+
+      .category {
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 14px;
+      }
+
+      .follow-up-card {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container game-container text-center">
+      <!-- Title -->
+      <h1 class="my-4">📖 Story Time</h1>
+
+      <p class="lead">Tell me a story I might not know.</p>
+
+      <!-- Story Prompt -->
+      <div class="card shadow-sm story-card my-4">
+        <div class="card-body d-flex flex-column justify-content-center">
+          <p id="category" class="category text-primary">Ready?</p>
+
+          <h2 id="storyPrompt" class="my-4">
+            Click the button to get a story prompt!
+          </h2>
+
+          <button id="newStory" class="btn btn-primary btn-lg">
+            📖 Tell Me A Story
+          </button>
+        </div>
+      </div>
+
+      <!-- Follow-Up Section -->
+      <div id="followUpCard" class="card shadow-sm follow-up-card mb-4">
+        <div class="card-body">
+          <h4>Want to keep the story going?</h4>
+
+          <p id="followUp" class="my-4">
+            Click below for a follow-up question.
+          </p>
+
+          <button id="newFollowUp" class="btn btn-outline-primary">
+            💭 Ask A Follow-Up
+          </button>
+        </div>
+      </div>
+
+      <!-- Another Story -->
+      <button id="anotherStory" class="btn btn-outline-secondary mb-5">
+        🎲 Give Me Another Story
+      </button>
+    </div>
+
+    <!-- Bootstrap JavaScript -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Our JavaScript -->
+    <script>
+      // ==========================================
+      // STORY PROMPTS
+      // ==========================================
+
+      const storyPrompts = [
+        // 🧸 CHILDHOOD
+
+        {
+          category: "Childhood",
+          text: "Tell me about a childhood memory you wish you could relive.",
+        },
+
+        {
+          category: "Childhood",
+          text: "Tell me about a time you got in trouble as a kid.",
+        },
+
+        {
+          category: "Childhood",
+          text: "Tell me about your favorite childhood birthday.",
+        },
+
+        {
+          category: "Childhood",
+          text: "Tell me about a toy or possession you were obsessed with.",
+        },
+
+        {
+          category: "Childhood",
+          text: "Tell me about a childhood friend you remember really well.",
+        },
+
+        {
+          category: "Childhood",
+          text: "Tell me about a family tradition you had growing up.",
+        },
+
+        {
+          category: "Childhood",
+          text: "Tell me about something you believed as a kid that turned out to be completely wrong.",
+        },
+
+        {
+          category: "Childhood",
+          text: "Tell me about a place from your childhood that you remember vividly.",
+        },
+
+        // 😂 FUNNY
+
+        {
+          category: "Funny",
+          text: "Tell me about your most embarrassing moment.",
+        },
+
+        {
+          category: "Funny",
+          text: "Tell me about a time you completely misunderstood a situation.",
+        },
+
+        {
+          category: "Funny",
+          text: "Tell me about the funniest thing you've ever seen happen in public.",
+        },
+
+        {
+          category: "Funny",
+          text: "Tell me about a time you tried to impress someone and it went horribly.",
+        },
+
+        {
+          category: "Funny",
+          text: "Tell me about your worst fashion choice.",
+        },
+
+        {
+          category: "Funny",
+          text: "Tell me about a time you laughed when you absolutely shouldn't have.",
+        },
+
+        {
+          category: "Funny",
+          text: "Tell me about a ridiculous argument you had with someone.",
+        },
+
+        {
+          category: "Funny",
+          text: "Tell me about the dumbest thing you've ever done because you were bored.",
+        },
+
+        {
+          category: "Funny",
+          text: "Tell me about a time you confidently said something that was completely wrong.",
+        },
+
+        {
+          category: "Funny",
+          text: "Tell me about a story your friends or family never let you live down.",
+        },
+
+        // ❤️ RELATIONSHIPS
+
+        {
+          category: "Relationships",
+          text: "Tell me about the first time you realized you really cared about someone.",
+        },
+
+        {
+          category: "Relationships",
+          text: "Tell me about the best friendship you've ever had.",
+        },
+
+        {
+          category: "Relationships",
+          text: "Tell me about someone who had a big impact on who you became.",
+        },
+
+        {
+          category: "Relationships",
+          text: "Tell me about a time someone did something unexpectedly kind for you.",
+        },
+
+        {
+          category: "Relationships",
+          text: "Tell me about a friendship that taught you something important.",
+        },
+
+        {
+          category: "Relationships",
+          text: "Tell me about a person you wish you could thank for something.",
+        },
+
+        {
+          category: "Relationships",
+          text: "Tell me about a time someone believed in you when you didn't believe in yourself.",
+        },
+
+        {
+          category: "Relationships",
+          text: "Tell me about a relationship that changed how you see people.",
+        },
+
+        {
+          category: "Relationships",
+          text: "Tell me about a time you realized someone really understood you.",
+        },
+
+        // 🧠 LIFE EXPERIENCES
+
+        {
+          category: "Life Experiences",
+          text: "Tell me about a moment that changed the way you think.",
+        },
+
+        {
+          category: "Life Experiences",
+          text: "Tell me about a failure that taught you something.",
+        },
+
+        {
+          category: "Life Experiences",
+          text: "Tell me about a time you had to make a difficult decision.",
+        },
+
+        {
+          category: "Life Experiences",
+          text: "Tell me about something you did that took a lot of courage.",
+        },
+
+        {
+          category: "Life Experiences",
+          text: "Tell me about a time you surprised yourself.",
+        },
+
+        {
+          category: "Life Experiences",
+          text: "Tell me about a time you were completely outside your comfort zone.",
+        },
+
+        {
+          category: "Life Experiences",
+          text: "Tell me about something you used to believe that you don't anymore.",
+        },
+
+        {
+          category: "Life Experiences",
+          text: "Tell me about a mistake you're actually grateful you made.",
+        },
+
+        {
+          category: "Life Experiences",
+          text: "Tell me about a moment when you realized you were growing up.",
+        },
+
+        {
+          category: "Life Experiences",
+          text: "Tell me about a time you chose to do something even though you were scared.",
+        },
+
+        // 🥹 MEANINGFUL
+
+        {
+          category: "Meaningful",
+          text: "Tell me about a memory that instantly makes you happy.",
+        },
+
+        {
+          category: "Meaningful",
+          text: "Tell me about a time you felt really loved.",
+        },
+
+        {
+          category: "Meaningful",
+          text: "Tell me about one of the best days you've ever had.",
+        },
+
+        {
+          category: "Meaningful",
+          text: "Tell me about a small moment that meant a lot to you.",
+        },
+
+        {
+          category: "Meaningful",
+          text: "Tell me about a time someone made your day without realizing it.",
+        },
+
+        {
+          category: "Meaningful",
+          text: "Tell me about a memory you hope you never forget.",
+        },
+
+        {
+          category: "Meaningful",
+          text: "Tell me about a place that feels like home to you.",
+        },
+
+        {
+          category: "Meaningful",
+          text: "Tell me about a moment you wish you could photograph and keep forever.",
+        },
+
+        {
+          category: "Meaningful",
+          text: "Tell me about something someone did for you that you'll always remember.",
+        },
+
+        {
+          category: "Meaningful",
+          text: "Tell me about a time you felt completely at peace.",
+        },
+
+        // 👀 STORIES I PROBABLY DON'T KNOW
+
+        {
+          category: "I Probably Don't Know This",
+          text: "Tell me something you've done that I've never heard about.",
+        },
+
+        {
+          category: "I Probably Don't Know This",
+          text: "Tell me about a phase of your life I wasn't around for.",
+        },
+
+        {
+          category: "I Probably Don't Know This",
+          text: "Tell me about a person from your past I've never heard you talk about.",
+        },
+
+        {
+          category: "I Probably Don't Know This",
+          text: "Tell me about a place that has a story behind it.",
+        },
+
+        {
+          category: "I Probably Don't Know This",
+          text: "Tell me about a weird experience you've never really had a reason to tell me.",
+        },
+
+        {
+          category: "I Probably Don't Know This",
+          text: "Tell me about a time you got away with something.",
+        },
+
+        {
+          category: "I Probably Don't Know This",
+          text: "Tell me about a secret talent you had as a kid.",
+        },
+
+        {
+          category: "I Probably Don't Know This",
+          text: "Tell me about a time you completely changed your plans.",
+        },
+
+        {
+          category: "I Probably Don't Know This",
+          text: "Tell me about a random day you'll never forget.",
+        },
+
+        {
+          category: "I Probably Don't Know This",
+          text: "Tell me about a story you've told so many times that you could tell it from memory.",
+        },
+
+        // 💕 US
+
+        {
+          category: "Us",
+          text: "Tell me the story of your first impression of me.",
+        },
+
+        {
+          category: "Us",
+          text: "Tell me about a moment with me that you think I'll never forget.",
+        },
+
+        {
+          category: "Us",
+          text: "Tell me about a moment with me that I probably don't realize was important to you.",
+        },
+
+        {
+          category: "Us",
+          text: "Tell me about the first time you felt really comfortable around me.",
+        },
+
+        {
+          category: "Us",
+          text: "Tell me about a time I made you laugh really hard.",
+        },
+
+        {
+          category: "Us",
+          text: "Tell me about a moment when you realized you missed me.",
+        },
+
+        {
+          category: "Us",
+          text: "Tell me about one of your favorite memories we've made.",
+        },
+
+        {
+          category: "Us",
+          text: "Tell me about a moment with me you wish you could experience again.",
+        },
+
+        {
+          category: "Us",
+          text: "Tell me about the funniest thing we've ever done together.",
+        },
+
+        {
+          category: "Us",
+          text: "Tell me about something you've always wanted us to do together.",
+        },
+
+        // 🎲 WILDCARD
+
+        {
+          category: "Wildcard",
+          text: "Tell me about the weirdest day you've ever had.",
+        },
+
+        {
+          category: "Wildcard",
+          text: "Tell me about the strangest person you've ever met.",
+        },
+
+        {
+          category: "Wildcard",
+          text: "Tell me about your most chaotic day.",
+        },
+
+        {
+          category: "Wildcard",
+          text: "Tell me about the weirdest coincidence that's happened to you.",
+        },
+
+        {
+          category: "Wildcard",
+          text: "Tell me about the most spontaneous thing you've ever done.",
+        },
+
+        {
+          category: "Wildcard",
+          text: "Tell me about the most interesting stranger you've ever talked to.",
+        },
+
+        {
+          category: "Wildcard",
+          text: "Tell me about a time you thought, 'There is no way this is actually happening.'",
+        },
+
+        {
+          category: "Wildcard",
+          text: "Tell me about a time you had absolutely no idea what you were doing but pretended you did.",
+        },
+
+        {
+          category: "Wildcard",
+          text: "Tell me about the weirdest place you've ever ended up.",
+        },
+
+        {
+          category: "Wildcard",
+          text: "Tell me about a story that sounds completely fake but is actually true.",
+        },
+      ];
+
+      // ==========================================
+      // FOLLOW-UP QUESTIONS
+      // ==========================================
+
+      const followUps = [
+        "What do you remember most about that?",
+        "How did you feel at the time?",
+        "What happened afterward?",
+        "Who else was there?",
+        "Would you do anything differently?",
+        "Do you think that experience changed you?",
+        "Have you ever told me that story before?",
+        "Would you want to experience something like that again?",
+        "What was going through your head at the time?",
+        "What part of the story do you remember most clearly?",
+        "How old were you?",
+        "What would you tell your younger self about that experience?",
+        "Did you realize how important that moment was at the time?",
+        "What do you think you learned from it?",
+        "Is that something you still think about?",
+        "What would have happened if things had gone differently?",
+        "Who would you tell that story to?",
+        "What is one detail from that day you'll never forget?",
+        "How do you think that experience influenced you?",
+        "If you could go back to that moment, what would you say?",
+      ];
+
+      // ==========================================
+      // HTML ELEMENTS
+      // ==========================================
+
+      const category = document.getElementById("category");
+
+      const storyPrompt = document.getElementById("storyPrompt");
+
+      const newStory = document.getElementById("newStory");
+
+      const anotherStory = document.getElementById("anotherStory");
+
+      const followUpCard = document.getElementById("followUpCard");
+
+      const followUp = document.getElementById("followUp");
+
+      const newFollowUp = document.getElementById("newFollowUp");
+
+      // ==========================================
+      // SHOW RANDOM STORY
+      // ==========================================
+
+      function showRandomStory() {
+        const randomNumber = Math.floor(Math.random() * storyPrompts.length);
+
+        const currentStory = storyPrompts[randomNumber];
+
+        category.textContent = currentStory.category;
+
+        storyPrompt.textContent = currentStory.text;
+
+        followUpCard.style.display = "block";
+
+        followUp.textContent = "Click below for a follow-up question.";
+      }
+
+      // ==========================================
+      // SHOW RANDOM FOLLOW-UP
+      // ==========================================
+
+      function showRandomFollowUp() {
+        const randomNumber = Math.floor(Math.random() * followUps.length);
+
+        followUp.textContent = followUps[randomNumber];
+      }
+
+      // ==========================================
+      // BUTTON EVENTS
+      // ==========================================
+
+      newStory.addEventListener("click", function () {
+        showRandomStory();
+      });
+
+      anotherStory.addEventListener("click", function () {
+        showRandomStory();
+      });
+
+      newFollowUp.addEventListener("click", function () {
+        showRandomFollowUp();
+      });
+    </script>
+  </body>
+</html>

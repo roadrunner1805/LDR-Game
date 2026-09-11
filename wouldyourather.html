@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Would You Rather?</title>
+
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+
+    <!-- Our CSS -->
+    <style>
+      body {
+        background-color: #ffebee;
+      }
+
+      .game-container {
+        max-width: 800px;
+        margin: auto;
+      }
+
+      .choice-button {
+        min-height: 150px;
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .choice-button.selected {
+        border-width: 4px;
+      }
+
+      .or-text {
+        font-size: 24px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container text-center game-container">
+      <h1 class="my-4">Would You Rather?</h1>
+
+      <p id="questionNumber" class="text-muted">Question 1</p>
+
+      <h3 class="my-4">Would you rather...</h3>
+
+      <!-- Choice buttons -->
+      <div class="row align-items-center g-3">
+        <div class="col-md-5">
+          <button
+            id="choiceA"
+            class="choice-button btn btn-outline-primary w-100"
+          >
+            Choice A
+          </button>
+        </div>
+
+        <div class="col-md-2">
+          <div class="or-text">OR</div>
+        </div>
+
+        <div class="col-md-5">
+          <button
+            id="choiceB"
+            class="choice-button btn btn-outline-primary w-100"
+          >
+            Choice B
+          </button>
+        </div>
+      </div>
+
+      <!-- Message -->
+      <p id="choiceMessage" class="mt-4 fw-bold"></p>
+
+      <!-- Next question -->
+      <button id="nextQuestion" class="btn btn-primary mt-3">
+        Next Question
+      </button>
+
+      <!-- Reset -->
+      <br />
+
+      <button id="resetGame" class="btn btn-outline-secondary mt-3">
+        Start Over
+      </button>
+    </div>
+
+    <!-- Bootstrap JavaScript -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Our JavaScript -->
+    <script>
+      const questions = [
+        {
+          optionA: "Live at the beach",
+          optionB: "Live in the mountains",
+        },
+
+        {
+          optionA: "Have unlimited money",
+          optionB: "Have unlimited free time",
+        },
+
+        {
+          optionA: "Be able to teleport anywhere",
+          optionB: "Be able to fly",
+        },
+
+        {
+          optionA: "Never eat pizza again",
+          optionB: "Never eat ice cream again",
+        },
+
+        {
+          optionA: "Have a house with a pool",
+          optionB: "Have a house with an incredible view",
+        },
+
+        {
+          optionA: "Go on a spontaneous road trip",
+          optionB: "Plan the perfect vacation six months ahead",
+        },
+
+        {
+          optionA: "Have a personal chef",
+          optionB: "Have a personal house cleaner",
+        },
+
+        {
+          optionA: "Always have perfect hair",
+          optionB: "Always have perfect outfits",
+        },
+
+        {
+          optionA: "Watch your favorite movie for the first time again",
+          optionB: "Listen to your favorite song for the first time again",
+        },
+
+        {
+          optionA: "Be able to read minds",
+          optionB: "Be able to see the future",
+        },
+
+        {
+          optionA: "Have a romantic picnic",
+          optionB: "Have a romantic dinner at a fancy restaurant",
+        },
+
+        {
+          optionA: "Receive a handwritten love letter",
+          optionB: "Receive a surprise date planned entirely for you",
+        },
+
+        {
+          optionA: "Have a weekend getaway together",
+          optionB: "Have an entire week together at home",
+        },
+
+        {
+          optionA: "Relive your first date",
+          optionB: "Skip ahead to your dream date together",
+        },
+
+        {
+          optionA: "Get a surprise gift",
+          optionB: "Get a surprise experience",
+        },
+
+        {
+          optionA: "Always know exactly what your partner is thinking",
+          optionB: "Always know exactly what your partner wants",
+        },
+
+        {
+          optionA: "Have the ability to pause time",
+          optionB: "Have the ability to rewind time",
+        },
+
+        {
+          optionA: "Fight one horse-sized duck",
+          optionB: "Fight 100 duck-sized horses",
+        },
+
+        {
+          optionA: "Have spaghetti for hair",
+          optionB: "Have pancakes for hands",
+        },
+
+        {
+          optionA: "Only be able to whisper",
+          optionB: "Only be able to shout",
+        },
+
+        {
+          optionA: "Have a pet dinosaur",
+          optionB: "Have a pet dragon",
+        },
+
+        {
+          optionA: "Have to wear clown shoes everywhere",
+          optionB: "Have to wear a cape everywhere",
+        },
+
+        {
+          optionA: "Talk to animals",
+          optionB: "Speak every human language",
+        },
+
+        {
+          optionA: "Be famous for something embarrassing",
+          optionB: "Be completely unknown but incredibly talented",
+        },
+
+        {
+          optionA: "Never use your phone for a week",
+          optionB: "Never watch TV for a year",
+        },
+
+        {
+          optionA: "Know exactly how you will die",
+          optionB: "Know exactly when you will die",
+        },
+
+        {
+          optionA: "Have your dream job but work 60 hours a week",
+          optionB: "Have an average job and work 20 hours a week",
+        },
+
+        {
+          optionA: "Be able to change one thing about your past",
+          optionB: "Be able to see one thing about your future",
+        },
+
+        {
+          optionA: "Travel the world but never settle down",
+          optionB: "Have your dream home but never travel",
+        },
+
+        {
+          optionA: "Have the perfect relationship",
+          optionB: "Have the perfect career",
+        },
+      ];
+
+      let currentQuestion = 0;
+      let choiceMade = false;
+
+      const choiceA = document.getElementById("choiceA");
+      const choiceB = document.getElementById("choiceB");
+      const nextQuestion = document.getElementById("nextQuestion");
+      const resetGame = document.getElementById("resetGame");
+      const questionNumber = document.getElementById("questionNumber");
+      const choiceMessage = document.getElementById("choiceMessage");
+
+      function showQuestion() {
+        choiceA.textContent = questions[currentQuestion].optionA;
+        choiceB.textContent = questions[currentQuestion].optionB;
+
+        questionNumber.textContent =
+          "Question " + (currentQuestion + 1) + " of " + questions.length;
+
+        choiceA.classList.remove("selected");
+        choiceB.classList.remove("selected");
+
+        choiceMessage.textContent = "";
+
+        choiceMade = false;
+      }
+
+      choiceA.addEventListener("click", function () {
+        if (choiceMade) {
+          return;
+        }
+
+        choiceA.classList.add("selected");
+
+        choiceMessage.textContent = "You chose this one!";
+
+        choiceMade = true;
+      });
+
+      choiceB.addEventListener("click", function () {
+        if (choiceMade) {
+          return;
+        }
+
+        choiceB.classList.add("selected");
+
+        choiceMessage.textContent = "You chose this one!";
+
+        choiceMade = true;
+      });
+
+      nextQuestion.addEventListener("click", function () {
+        currentQuestion++;
+
+        if (currentQuestion >= questions.length) {
+          currentQuestion = 0;
+        }
+
+        showQuestion();
+      });
+
+      resetGame.addEventListener("click", function () {
+        currentQuestion = 0;
+
+        showQuestion();
+      });
+
+      showQuestion();
+    </script>
+  </body>
+</html>

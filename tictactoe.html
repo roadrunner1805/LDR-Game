@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Tic Tac Toe</title>
+
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+
+    <!-- Our CSS -->
+    <style>
+      .game-board {
+        max-width: 500px;
+        margin: auto;
+      }
+
+      .square {
+        height: 150px;
+        font-size: 60px;
+        font-weight: bold;
+      }
+
+      body {
+        background-color: #fff0e0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container text-center">
+      <h1 class="my-4">Tic Tac Toe</h1>
+
+      <h4 id="gameStatus">Player X's Turn</h4>
+
+      <div class="game-board mt-4">
+        <div class="row g-1">
+          <!-- Square 1 -->
+          <div class="col-4">
+            <button
+              class="square btn btn-outline-dark w-100"
+              data-number="0"
+            ></button>
+          </div>
+
+          <!-- Square 2 -->
+          <div class="col-4">
+            <button
+              class="square btn btn-outline-dark w-100"
+              data-number="1"
+            ></button>
+          </div>
+
+          <!-- Square 3 -->
+          <div class="col-4">
+            <button
+              class="square btn btn-outline-dark w-100"
+              data-number="2"
+            ></button>
+          </div>
+
+          <!-- Square 4 -->
+          <div class="col-4">
+            <button
+              class="square btn btn-outline-dark w-100"
+              data-number="3"
+            ></button>
+          </div>
+
+          <!-- Square 5 -->
+          <div class="col-4">
+            <button
+              class="square btn btn-outline-dark w-100"
+              data-number="4"
+            ></button>
+          </div>
+
+          <!-- Square 6 -->
+          <div class="col-4">
+            <button
+              class="square btn btn-outline-dark w-100"
+              data-number="5"
+            ></button>
+          </div>
+
+          <!-- Square 7 -->
+          <div class="col-4">
+            <button
+              class="square btn btn-outline-dark w-100"
+              data-number="6"
+            ></button>
+          </div>
+
+          <!-- Square 8 -->
+          <div class="col-4">
+            <button
+              class="square btn btn-outline-dark w-100"
+              data-number="7"
+            ></button>
+          </div>
+
+          <!-- Square 9 -->
+          <div class="col-4">
+            <button
+              class="square btn btn-outline-dark w-100"
+              data-number="8"
+            ></button>
+          </div>
+        </div>
+      </div>
+
+      <button id="resetGame" class="btn btn-primary mt-4">Reset Game</button>
+    </div>
+
+    <!-- Bootstrap JavaScript -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Our JavaScript -->
+    <script>
+      let currentPlayer = "X";
+      let gameOver = false;
+
+      const squares = document.querySelectorAll(".square");
+      const gameStatus = document.getElementById("gameStatus");
+      const resetGame = document.getElementById("resetGame");
+
+      const winningCombinations = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+      ];
+
+      squares.forEach(function (square) {
+        square.addEventListener("click", function () {
+          if (square.textContent !== "" || gameOver) {
+            return;
+          }
+
+          square.textContent = currentPlayer;
+
+          checkWinner();
+
+          if (!gameOver) {
+            if (currentPlayer === "X") {
+              currentPlayer = "O";
+            } else {
+              currentPlayer = "X";
+            }
+
+            gameStatus.textContent = "Player " + currentPlayer + "'s Turn";
+          }
+        });
+      });
+
+      function checkWinner() {
+        for (let combination of winningCombinations) {
+          const first = squares[combination[0]].textContent;
+          const second = squares[combination[1]].textContent;
+          const third = squares[combination[2]].textContent;
+
+          if (first !== "" && first === second && second === third) {
+            gameStatus.textContent = "Player " + first + " Wins!";
+            gameOver = true;
+            return;
+          }
+        }
+
+        let boardFull = true;
+
+        squares.forEach(function (square) {
+          if (square.textContent === "") {
+            boardFull = false;
+          }
+        });
+
+        if (boardFull) {
+          gameStatus.textContent = "It's a Draw!";
+          gameOver = true;
+        }
+      }
+
+      resetGame.addEventListener("click", function () {
+        squares.forEach(function (square) {
+          square.textContent = "";
+        });
+
+        currentPlayer = "X";
+        gameOver = false;
+
+        gameStatus.textContent = "Player X's Turn";
+      });
+    </script>
+  </body>
+</html>
