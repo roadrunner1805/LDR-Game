@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Let's Plan On It!</title>
+
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+
+    <!-- Our CSS -->
+    <style>
+      body {
+        background-color: #fff8d6;
+      }
+
+      .game-container {
+        max-width: 850px;
+        margin: auto;
+      }
+
+      .prompt-card {
+        min-height: 250px;
+      }
+
+      #prompt {
+        font-size: 28px;
+        font-weight: 500;
+      }
+
+      .category {
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 14px;
+      }
+
+      .plan-item {
+        text-align: left;
+      }
+
+      .plan-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .plan-text {
+        flex-grow: 1;
+      }
+
+      .completed {
+        text-decoration: line-through;
+        opacity: 0.5;
+      }
+
+      .thoughts-box {
+        margin-top: 15px;
+      }
+
+      .save-message {
+        font-size: 14px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container game-container text-center">
+      <!-- Title -->
+      <h1 class="my-4">Let's Plan On It!</h1>
+
+      <p class="lead">
+        A little game for planning the things we want to do together.
+      </p>
+
+      <!-- Prompt Card -->
+      <div class="card shadow-sm prompt-card my-4">
+        <div class="card-body d-flex flex-column justify-content-center">
+          <p id="category" class="category text-primary">Ready?</p>
+
+          <h2 id="prompt" class="my-4">Click the button to get a plan!</h2>
+
+          <button id="newPrompt" class="btn btn-primary btn-lg">
+            🎲 Give Us A Prompt
+          </button>
+        </div>
+      </div>
+
+      <!-- Add Plan Section -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h4>Want to do this?</h4>
+
+          <button id="addPlan" class="btn btn-success mt-2">
+            ❤️ Add To Our List
+          </button>
+
+          <p id="addMessage" class="save-message text-success mt-2"></p>
+        </div>
+      </div>
+
+      <!-- Our Future List -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h3>Our Future List</h3>
+
+          <p class="text-muted">Things we want to do together.</p>
+
+          <div id="planList">
+            <p class="text-muted">Your list is empty. Let's make some plans!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Clear List -->
+      <button id="clearList" class="btn btn-outline-danger mb-5">
+        Clear Our List
+      </button>
+    </div>
+
+    <!-- Bootstrap JavaScript -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Our JavaScript -->
+    <script>
+      // ==========================================
+      // PROMPTS
+      // ==========================================
+
+      const prompts = [
+        // 🗺️ PLACES
+
+        {
+          category: "Places",
+          text: "Pick somewhere neither of you has ever been and plan a trip there.",
+        },
+
+        {
+          category: "Places",
+          text: "Find a city you'd both love to explore for a weekend.",
+        },
+
+        {
+          category: "Places",
+          text: "Pick a national park you'd like to visit together.",
+        },
+
+        {
+          category: "Places",
+          text: "Choose somewhere you'd love to watch the sunrise together.",
+        },
+
+        {
+          category: "Places",
+          text: "Choose somewhere you'd love to watch the sunset together.",
+        },
+
+        {
+          category: "Places",
+          text: "Pick somewhere you'd want to spend an entire weekend together.",
+        },
+
+        {
+          category: "Places",
+          text: "Choose a place you've both talked about visiting someday.",
+        },
+
+        {
+          category: "Places",
+          text: "Pick a completely random town and plan a day there.",
+        },
+
+        // 🍝 DATES
+
+        {
+          category: "Dates",
+          text: "Plan a picnic somewhere pretty.",
+        },
+
+        {
+          category: "Dates",
+          text: "Find a restaurant neither of you has tried and plan a date there.",
+        },
+
+        {
+          category: "Dates",
+          text: "Plan a fancy date night.",
+        },
+
+        {
+          category: "Dates",
+          text: "Plan a movie marathon with all your favorite movies.",
+        },
+
+        {
+          category: "Dates",
+          text: "Find an activity neither of you has ever done together.",
+        },
+
+        {
+          category: "Dates",
+          text: "Plan a date completely around one person's favorite thing.",
+        },
+
+        {
+          category: "Dates",
+          text: "Plan a breakfast date and find the best breakfast spot you can.",
+        },
+
+        {
+          category: "Dates",
+          text: "Plan a date where you each surprise the other with one activity.",
+        },
+
+        // 🏔️ ADVENTURES
+
+        {
+          category: "Adventures",
+          text: "Plan a road trip together.",
+        },
+
+        {
+          category: "Adventures",
+          text: "Plan a camping trip.",
+        },
+
+        {
+          category: "Adventures",
+          text: "Find a hike you've never done and plan to do it together.",
+        },
+
+        {
+          category: "Adventures",
+          text: "Find somewhere you can go stargazing together.",
+        },
+
+        {
+          category: "Adventures",
+          text: "Plan something that scares you both just a little.",
+        },
+
+        {
+          category: "Adventures",
+          text: "Plan a day where you explore somewhere without a strict itinerary.",
+        },
+
+        {
+          category: "Adventures",
+          text: "Find the weirdest roadside attraction you could visit together.",
+        },
+
+        {
+          category: "Adventures",
+          text: "Plan a spontaneous weekend getaway.",
+        },
+
+        // 🏠 FUTURE
+
+        {
+          category: "Future",
+          text: "Choose something you want to accomplish together this year.",
+        },
+
+        {
+          category: "Future",
+          text: "Pick something you want to learn how to do together.",
+        },
+
+        {
+          category: "Future",
+          text: "Come up with a tradition you want to start together.",
+        },
+
+        {
+          category: "Future",
+          text: "Pick something you want to experience together for the first time.",
+        },
+
+        {
+          category: "Future",
+          text: "Choose something you want to save up for together.",
+        },
+
+        {
+          category: "Future",
+          text: "Pick something you want to experience together at least once.",
+        },
+
+        {
+          category: "Future",
+          text: "Imagine your perfect weekend together five years from now. What would you do?",
+        },
+
+        {
+          category: "Future",
+          text: "Choose something you've talked about doing 'someday' and make a real plan for it.",
+        },
+
+        // 💕 ROMANTIC
+
+        {
+          category: "Romantic",
+          text: "Plan your dream date together.",
+        },
+
+        {
+          category: "Romantic",
+          text: "Plan a surprise date for each other.",
+        },
+
+        {
+          category: "Romantic",
+          text: "Recreate one of your favorite dates together.",
+        },
+
+        {
+          category: "Romantic",
+          text: "Plan a weekend where you barely use your phones.",
+        },
+
+        {
+          category: "Romantic",
+          text: "Pick somewhere you'd love to wake up together.",
+        },
+
+        {
+          category: "Romantic",
+          text: "Plan something you've always said you want to do 'one day.'",
+        },
+
+        {
+          category: "Romantic",
+          text: "Plan a special date for your next anniversary.",
+        },
+
+        {
+          category: "Romantic",
+          text: "Plan a weekend where the only goal is spending time together.",
+        },
+
+        // 🎲 RANDOM
+
+        {
+          category: "Random",
+          text: "Plan a trip based entirely around food.",
+        },
+
+        {
+          category: "Random",
+          text: "Find a concert you'd both want to attend.",
+        },
+
+        {
+          category: "Random",
+          text: "Find a movie location you'd love to visit.",
+        },
+
+        {
+          category: "Random",
+          text: "Plan the most ridiculous road trip possible.",
+        },
+
+        {
+          category: "Random",
+          text: "Pick a random activity and agree to try it together.",
+        },
+
+        {
+          category: "Random",
+          text: "Find the most unusual attraction within driving distance.",
+        },
+
+        {
+          category: "Random",
+          text: "Plan a day where you each get to choose half of the activities.",
+        },
+
+        {
+          category: "Random",
+          text: "Pick something neither of you has tried before and put it on the list.",
+        },
+      ];
+
+      // ==========================================
+      // VARIABLES
+      // ==========================================
+
+      let currentPrompt = null;
+
+      let plans = JSON.parse(localStorage.getItem("ourPlans")) || [];
+
+      // ==========================================
+      // HTML ELEMENTS
+      // ==========================================
+
+      const category = document.getElementById("category");
+
+      const prompt = document.getElementById("prompt");
+
+      const newPrompt = document.getElementById("newPrompt");
+
+      const addPlan = document.getElementById("addPlan");
+
+      const planList = document.getElementById("planList");
+
+      const clearList = document.getElementById("clearList");
+
+      const addMessage = document.getElementById("addMessage");
+
+      // ==========================================
+      // SHOW RANDOM PROMPT
+      // ==========================================
+
+      function showRandomPrompt() {
+        const randomNumber = Math.floor(Math.random() * prompts.length);
+
+        currentPrompt = prompts[randomNumber];
+
+        category.textContent = currentPrompt.category;
+
+        prompt.textContent = currentPrompt.text;
+
+        addMessage.textContent = "";
+      }
+
+      // ==========================================
+      // ADD PLAN TO LIST
+      // ==========================================
+
+      function addCurrentPlan() {
+        if (currentPrompt === null) {
+          return;
+        }
+
+        const alreadyAdded = plans.some(function (plan) {
+          return plan.text === currentPrompt.text;
+        });
+
+        if (alreadyAdded) {
+          addMessage.textContent = "You've already added this plan!";
+
+          addMessage.className = "save-message text-danger mt-2";
+
+          return;
+        }
+
+        const newPlan = {
+          text: currentPrompt.text,
+
+          category: currentPrompt.category,
+
+          thoughts: "",
+
+          completed: false,
+        };
+
+        plans.push(newPlan);
+
+        savePlans();
+
+        displayPlans();
+
+        addMessage.textContent = "Added to your list! ❤️";
+
+        addMessage.className = "save-message text-success mt-2";
+      }
+
+      // ==========================================
+      // DISPLAY PLANS
+      // ==========================================
+
+      function displayPlans() {
+        planList.innerHTML = "";
+
+        if (plans.length === 0) {
+          planList.innerHTML =
+            '<p class="text-muted">Your list is empty. Let\'s make some plans!</p>';
+
+          return;
+        }
+
+        plans.forEach(function (plan, index) {
+          // Main plan container
+
+          const planContainer = document.createElement("div");
+
+          planContainer.className = "plan-item border-bottom py-4";
+
+          // --------------------------------------
+          // PLAN HEADER
+          // --------------------------------------
+
+          const planHeader = document.createElement("div");
+
+          planHeader.className = "plan-header";
+
+          // Checkbox
+
+          const checkbox = document.createElement("input");
+
+          checkbox.type = "checkbox";
+
+          checkbox.className = "form-check-input";
+
+          checkbox.checked = plan.completed;
+
+          checkbox.addEventListener("change", function () {
+            plans[index].completed = checkbox.checked;
+
+            savePlans();
+
+            displayPlans();
+          });
+
+          // Plan text
+
+          const planText = document.createElement("span");
+
+          planText.textContent = plan.text;
+
+          planText.className = "plan-text";
+
+          if (plan.completed) {
+            planText.classList.add("completed");
+          }
+
+          // Delete button
+
+          const deleteButton = document.createElement("button");
+
+          deleteButton.textContent = "Delete";
+
+          deleteButton.className = "btn btn-sm btn-outline-danger";
+
+          deleteButton.addEventListener("click", function () {
+            plans.splice(index, 1);
+
+            savePlans();
+
+            displayPlans();
+          });
+
+          // Put header together
+
+          planHeader.appendChild(checkbox);
+
+          planHeader.appendChild(planText);
+
+          planHeader.appendChild(deleteButton);
+
+          // --------------------------------------
+          // THOUGHTS SECTION
+          // --------------------------------------
+
+          const thoughtsContainer = document.createElement("div");
+
+          thoughtsContainer.className = "thoughts-box";
+
+          const thoughtsLabel = document.createElement("label");
+
+          thoughtsLabel.textContent = "📝 Our thoughts:";
+
+          thoughtsLabel.className = "form-label fw-bold";
+
+          // Text area
+
+          const thoughtsInput = document.createElement("textarea");
+
+          thoughtsInput.className = "form-control";
+
+          thoughtsInput.rows = 3;
+
+          thoughtsInput.placeholder =
+            "Ideas, dates, places, details, things to remember...";
+
+          thoughtsInput.value = plan.thoughts || "";
+
+          // Save thoughts button
+
+          const saveThoughts = document.createElement("button");
+
+          saveThoughts.textContent = "Save Thoughts";
+
+          saveThoughts.className = "btn btn-sm btn-outline-primary mt-2";
+
+          const thoughtsMessage = document.createElement("span");
+
+          thoughtsMessage.className = "save-message text-success ms-2";
+
+          saveThoughts.addEventListener("click", function () {
+            plans[index].thoughts = thoughtsInput.value;
+
+            savePlans();
+
+            thoughtsMessage.textContent = "Saved! ✓";
+
+            setTimeout(function () {
+              thoughtsMessage.textContent = "";
+            }, 2000);
+          });
+
+          // Put thoughts together
+
+          thoughtsContainer.appendChild(thoughtsLabel);
+
+          thoughtsContainer.appendChild(thoughtsInput);
+
+          thoughtsContainer.appendChild(saveThoughts);
+
+          thoughtsContainer.appendChild(thoughtsMessage);
+
+          // --------------------------------------
+          // PUT EVERYTHING TOGETHER
+          // --------------------------------------
+
+          planContainer.appendChild(planHeader);
+
+          planContainer.appendChild(thoughtsContainer);
+
+          planList.appendChild(planContainer);
+        });
+      }
+
+      // ==========================================
+      // SAVE PLANS
+      // ==========================================
+
+      function savePlans() {
+        localStorage.setItem("ourPlans", JSON.stringify(plans));
+      }
+
+      // ==========================================
+      // CLEAR EVERYTHING
+      // ==========================================
+
+      clearList.addEventListener("click", function () {
+        if (plans.length === 0) {
+          return;
+        }
+
+        const confirmClear = confirm(
+          "Are you sure you want to clear your entire list?",
+        );
+
+        if (confirmClear) {
+          plans = [];
+
+          savePlans();
+
+          displayPlans();
+        }
+      });
+
+      // ==========================================
+      // BUTTON EVENTS
+      // ==========================================
+
+      newPrompt.addEventListener("click", function () {
+        showRandomPrompt();
+      });
+
+      addPlan.addEventListener("click", function () {
+        addCurrentPlan();
+      });
+
+      // ==========================================
+      // START GAME
+      // ==========================================
+
+      displayPlans();
+
+      showRandomPrompt();
+    </script>
+  </body>
+</html>

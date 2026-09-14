@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>High, Low, Buffalo</title>
+
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
+
+      .game-container {
+        max-width: 800px;
+        margin: auto;
+      }
+
+      .prompt-card {
+        min-height: 250px;
+      }
+
+      .prompt-text {
+        font-size: 1.4rem;
+        min-height: 70px;
+      }
+
+      .answer-box {
+        min-height: 120px;
+        resize: vertical;
+      }
+
+      .wild-card {
+        display: none;
+      }
+
+      .past-checkins {
+        display: none;
+      }
+
+      .checkin-entry {
+        border-left: 4px solid #0d6efd;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container game-container py-4">
+      <!-- TITLE -->
+      <div class="text-center mb-5">
+        <h1>☀️ High, Low, Buffalo 🦬</h1>
+
+        <p class="lead">A little check-in about your day.</p>
+      </div>
+
+      <!-- HIGH -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h2>☀️ High</h2>
+
+          <p class="text-muted">What's something good from your day?</p>
+
+          <p id="highPrompt" class="prompt-text">
+            Click the button for a High prompt.
+          </p>
+
+          <button id="highButton" class="btn btn-primary mb-3">
+            ☀️ Give Me A High
+          </button>
+
+          <textarea
+            id="highAnswer"
+            class="form-control answer-box"
+            placeholder="Write your answer here..."
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- LOW -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h2>🌧️ Low</h2>
+
+          <p class="text-muted">
+            What's something difficult, frustrating, or disappointing?
+          </p>
+
+          <p id="lowPrompt" class="prompt-text">
+            Click the button for a Low prompt.
+          </p>
+
+          <button id="lowButton" class="btn btn-secondary mb-3">
+            🌧️ Give Me A Low
+          </button>
+
+          <textarea
+            id="lowAnswer"
+            class="form-control answer-box"
+            placeholder="Write your answer here..."
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- BUFFALO -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h2>🦬 Buffalo</h2>
+
+          <p class="text-muted">
+            Something random that doesn't fit into High or Low.
+          </p>
+
+          <p id="buffaloPrompt" class="prompt-text">
+            Click the button for a Buffalo prompt.
+          </p>
+
+          <button id="buffaloButton" class="btn btn-warning mb-3">
+            🦬 Give Me A Buffalo
+          </button>
+
+          <textarea
+            id="buffaloAnswer"
+            class="form-control answer-box"
+            placeholder="Write your answer here..."
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- WILD CARD -->
+      <div id="wildCard" class="card shadow-sm mb-4 wild-card">
+        <div class="card-body text-center">
+          <h2>🎲 Wild Card</h2>
+
+          <p id="wildPrompt" class="prompt-text">
+            Your Wild Card will appear here.
+          </p>
+
+          <button id="wildButton" class="btn btn-dark">
+            🎲 Give Me A Wild Card
+          </button>
+        </div>
+      </div>
+
+      <!-- SAVE -->
+      <div class="text-center mb-5">
+        <button id="saveButton" class="btn btn-success btn-lg">
+          💾 Save This Check-In
+        </button>
+
+        <p id="saveMessage" class="text-success mt-3"></p>
+      </div>
+
+      <!-- PAST CHECK-INS -->
+      <div class="text-center mb-4">
+        <button id="pastButton" class="btn btn-outline-primary">
+          📖 View Past Check-Ins
+        </button>
+      </div>
+
+      <div id="pastCheckins" class="past-checkins">
+        <h2 class="text-center mb-4">📖 Our Past Check-Ins</h2>
+
+        <div id="checkinList"></div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JavaScript -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- OUR JAVASCRIPT -->
+    <script>
+      // ==========================================
+      // HIGH PROMPTS
+      // ==========================================
+
+      const highPrompts = [
+        "What was the best part of your day?",
+
+        "What made you smile today?",
+
+        "What was something you were proud of?",
+
+        "What was the highlight of your week?",
+
+        "What is something you're looking forward to?",
+
+        "What was a small win you had?",
+
+        "What made you feel happy today?",
+
+        "What is something that went better than expected?",
+
+        "Who made your day a little better?",
+
+        "What is something you are grateful for today?",
+      ];
+
+      // ==========================================
+      // LOW PROMPTS
+      // ==========================================
+
+      const lowPrompts = [
+        "What was the hardest part of your day?",
+
+        "What annoyed you today?",
+
+        "What was something that didn't go how you wanted?",
+
+        "What stressed you out this week?",
+
+        "What was something you wish had gone differently?",
+
+        "What has been weighing on your mind?",
+
+        "What was your biggest frustration this week?",
+
+        "What made today harder than it needed to be?",
+
+        "What is something you wish you could change about today?",
+
+        "What was something that drained your energy?",
+      ];
+
+      // ==========================================
+      // BUFFALO PROMPTS
+      // ==========================================
+
+      const buffaloPrompts = [
+        "Tell me something random that happened today.",
+
+        "What's something weird you saw today?",
+
+        "Tell me a completely unnecessary fact.",
+
+        "What's something you've been thinking about lately?",
+
+        "What's something you haven't told me yet?",
+
+        "What's something you're currently obsessed with?",
+
+        "Tell me something you want to remember about this week.",
+
+        "What's something random that made you think of me?",
+
+        "What's something you are curious about right now?",
+
+        "Tell me something completely random about your day.",
+
+        "What song has been stuck in your head lately?",
+
+        "What's something funny you saw recently?",
+
+        "What is something you learned recently?",
+
+        "What's something you want to try someday?",
+
+        "Tell me about something that made you stop and think today.",
+      ];
+
+      // ==========================================
+      // WILD CARD PROMPTS
+      // ==========================================
+
+      const wildPrompts = [
+        "Send me a picture from your day.",
+
+        "Tell the other person one thing you appreciate about them.",
+
+        "Make up a ridiculous headline describing your day.",
+
+        "What song describes your day? Explain why.",
+
+        "Give your day a rating from 1–10 and explain it.",
+
+        "Describe your day using only 3 emojis.",
+
+        "What would you change about today if you could?",
+
+        "Tell the other person something they don't know about your day.",
+
+        "Describe your day as a movie title.",
+
+        "What was the most random thought you had today?",
+
+        "If today were a food, what would it be?",
+
+        "Give your day a ridiculous nickname.",
+
+        "What is one thing you wish I could have experienced with you today?",
+
+        "What would your day look like as a meme?",
+
+        "What's one thing you want to carry with you into tomorrow?",
+      ];
+
+      // ==========================================
+      // GET HTML ELEMENTS
+      // ==========================================
+
+      const highPrompt = document.getElementById("highPrompt");
+
+      const lowPrompt = document.getElementById("lowPrompt");
+
+      const buffaloPrompt = document.getElementById("buffaloPrompt");
+
+      const wildPrompt = document.getElementById("wildPrompt");
+
+      const highAnswer = document.getElementById("highAnswer");
+
+      const lowAnswer = document.getElementById("lowAnswer");
+
+      const buffaloAnswer = document.getElementById("buffaloAnswer");
+
+      const wildCard = document.getElementById("wildCard");
+
+      const saveMessage = document.getElementById("saveMessage");
+
+      const pastCheckins = document.getElementById("pastCheckins");
+
+      const checkinList = document.getElementById("checkinList");
+
+      // ==========================================
+      // RANDOM PROMPT FUNCTION
+      // ==========================================
+
+      function randomPrompt(array) {
+        const randomNumber = Math.floor(Math.random() * array.length);
+
+        return array[randomNumber];
+      }
+
+      // ==========================================
+      // HIGH BUTTON
+      // ==========================================
+
+      document
+        .getElementById("highButton")
+        .addEventListener("click", function () {
+          highPrompt.textContent = randomPrompt(highPrompts);
+        });
+
+      // ==========================================
+      // LOW BUTTON
+      // ==========================================
+
+      document
+        .getElementById("lowButton")
+        .addEventListener("click", function () {
+          lowPrompt.textContent = randomPrompt(lowPrompts);
+        });
+
+      // ==========================================
+      // BUFFALO BUTTON
+      // ==========================================
+
+      document
+        .getElementById("buffaloButton")
+        .addEventListener("click", function () {
+          buffaloPrompt.textContent = randomPrompt(buffaloPrompts);
+        });
+
+      // ==========================================
+      // WILD CARD BUTTON
+      // ==========================================
+
+      document
+        .getElementById("wildButton")
+        .addEventListener("click", function () {
+          wildPrompt.textContent = randomPrompt(wildPrompts);
+        });
+
+      // ==========================================
+      // SHOW WILD CARD
+      // ==========================================
+
+      function showWildCard() {
+        wildCard.style.display = "block";
+
+        wildPrompt.textContent = randomPrompt(wildPrompts);
+      }
+
+      // Show Wild Card after all three
+      // sections have been used
+
+      document
+        .getElementById("buffaloButton")
+        .addEventListener("click", function () {
+          showWildCard();
+        });
+
+      // ==========================================
+      // SAVE CHECK-IN
+      // ==========================================
+
+      document
+        .getElementById("saveButton")
+        .addEventListener("click", function () {
+          const high = highAnswer.value.trim();
+
+          const low = lowAnswer.value.trim();
+
+          const buffalo = buffaloAnswer.value.trim();
+
+          // Make sure answers aren't empty
+
+          if (high === "" || low === "" || buffalo === "") {
+            saveMessage.textContent =
+              "Please answer your High, Low, and Buffalo first!";
+
+            return;
+          }
+
+          // Create the check-in
+
+          const checkin = {
+            date: new Date().toLocaleDateString(),
+
+            high: high,
+
+            low: low,
+
+            buffalo: buffalo,
+          };
+
+          // Get existing check-ins
+
+          let checkins = JSON.parse(localStorage.getItem("checkins")) || [];
+
+          // Add new check-in
+
+          checkins.unshift(checkin);
+
+          // Save to browser
+
+          localStorage.setItem("checkins", JSON.stringify(checkins));
+
+          // Tell user it worked
+
+          saveMessage.textContent = "✓ Check-in saved!";
+
+          // Clear answers
+
+          highAnswer.value = "";
+
+          lowAnswer.value = "";
+
+          buffaloAnswer.value = "";
+
+          // Refresh saved check-ins
+
+          displayCheckins();
+        });
+
+      // ==========================================
+      // DISPLAY SAVED CHECK-INS
+      // ==========================================
+
+      function displayCheckins() {
+        const checkins = JSON.parse(localStorage.getItem("checkins")) || [];
+
+        checkinList.innerHTML = "";
+
+        if (checkins.length === 0) {
+          checkinList.innerHTML =
+            '<p class="text-center text-muted">No check-ins saved yet.</p>';
+
+          return;
+        }
+
+        checkins.forEach(function (checkin) {
+          const entry = document.createElement("div");
+
+          entry.className = "card checkin-entry shadow-sm mb-4";
+
+          entry.innerHTML = `
+
+            <div class="card-body">
+
+              <p class="text-muted">
+                ${checkin.date}
+              </p>
+
+              <h5>☀️ High</h5>
+
+              <p>
+                ${checkin.high}
+              </p>
+
+              <h5>🌧️ Low</h5>
+
+              <p>
+                ${checkin.low}
+              </p>
+
+              <h5>🦬 Buffalo</h5>
+
+              <p>
+                ${checkin.buffalo}
+              </p>
+
+            </div>
+
+          `;
+
+          checkinList.appendChild(entry);
+        });
+      }
+
+      // ==========================================
+      // VIEW PAST CHECK-INS
+      // ==========================================
+
+      document
+        .getElementById("pastButton")
+        .addEventListener("click", function () {
+          displayCheckins();
+
+          if (
+            pastCheckins.style.display === "none" ||
+            pastCheckins.style.display === ""
+          ) {
+            pastCheckins.style.display = "block";
+
+            this.textContent = "📕 Hide Past Check-Ins";
+          } else {
+            pastCheckins.style.display = "none";
+
+            this.textContent = "📖 View Past Check-Ins";
+          }
+        });
+
+      // ==========================================
+      // LOAD SAVED CHECK-INS
+      // ==========================================
+
+      displayCheckins();
+    </script>
+  </body>
+</html>
